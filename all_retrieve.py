@@ -7,4 +7,4 @@ from retrieve import forts
 
 if __name__ == '__main__':
     check_dir(data_dir)
-    forts.download_files()
+    forts.parse_links()
