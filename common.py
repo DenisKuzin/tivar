@@ -22,7 +22,8 @@ def check_dir(path):
 def download_file(file_type, direct_link):
     check_dir(join(data_dir, file_type))
     file_path = join(data_dir, file_type, direct_link.split('/')[-1])
+    tmp_file_path = u'%s.tmp' % file_path
     if not exists(file_path):
-        with open(u'%s.tmp' % file_path, 'wb') as current_file:
+        with open(tmp_file_path, 'wb') as current_file:
             current_file.write(get(direct_link).content)
-        rename(u'%s.tmo', file_path)
+        rename(tmp_file_path, file_path)

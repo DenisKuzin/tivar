@@ -8,7 +8,7 @@ from datetime import datetime, date, time, timedelta
 from process.dates import work_dates_between
 from common import download_file
 from requests import get
-from lxml.etree import HTML
+from lxml.html import fromstring
 
 forts_tradesfile_publish_time = time(19)
 u'''
@@ -23,9 +23,11 @@ def parse_links():
     '''
     for current_year in xrange(2003, date.today().year + 1):
         page_link = u'http://ftp.rts.ru/pub/info/stats/history/F/%s/' % current_year
-        html = HTML(get(page_link).text)
-        for current_link in html.make_links_absolute(page_link).xpath('/html/body/pre/a[@href!="http://ftp.rtsnet.ru/pub/info/stats/history/F/"]/@href'):
-            download_file(current_link)
+        html = fromstring(get(page_link).text)
+        html.make_links_absolute(page_link)
+        for current_link in html.xpath('/html/body/pre/a[@href!="http://ftp.rts.ru/pub/info/stats/history/F/"]/@href'):
+            if current_link.split('/')[-1].lower().startswith('ft'):
+                download_file('ft', current_link)
 
 def generate_links():
     u'''
