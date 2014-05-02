@@ -7,16 +7,18 @@ from requests import get
 from datetime import datetime
 from re import findall
 
+source_name = 'sberbank'
+
 def get_tickers():
     '''
     Get ticker list from sberbank-am.ru
     >>> get_tickers()[1]
-    {u'launch': datetime.datetime(2006, 10, 11, 0, 0), u'id': 13, u'name': u'\u041c\u0435\u0442\u0430\u043b\u043b\u0443\u0440\u0433\u0438\u044f'}
+    {'launch': datetime.datetime(2006, 10, 11, 0, 0), 'id': 13, 'name': u'\u041c\u0435\u0442\u0430\u043b\u043b\u0443\u0440\u0433\u0438\u044f'}
     '''
     raw_html = get('http://sberbank-am.ru/rus/statistics/table.wbp').text
     tickers = []
     for ticker in findall(r'fundMap\[\'(\d+)\'\][^\};]+fundName:\'([^\']+)\'[^\};]+lunchDate:\'(\d+/\d+/\d+)\',[^\};]+\};', raw_html):
-        tickers.append({u'id': int(ticker[0]), u'name': ticker[1], u'launch': datetime.strptime(ticker[2], '%Y/%m/%d')})
+        tickers.append({'id': int(ticker[0]), 'name': ticker[1], 'launch': datetime.strptime(ticker[2], '%Y/%m/%d')})
     return tickers
 
 def get_trades(ticker, start, stop):
