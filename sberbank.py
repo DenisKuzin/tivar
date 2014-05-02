@@ -7,10 +7,10 @@ from requests import get
 from datetime import datetime
 from re import findall
 
-def tickers():
+def get_tickers():
     '''
     Get ticker list from sberbank-am.ru
-    >>> tickers()[1]
+    >>> get_tickers()[1]
     {u'launch': datetime.datetime(2006, 10, 11, 0, 0), u'id': 13, u'name': u'\u041c\u0435\u0442\u0430\u043b\u043b\u0443\u0440\u0433\u0438\u044f'}
     '''
     raw_html = get('http://sberbank-am.ru/rus/statistics/table.wbp').text
@@ -19,12 +19,12 @@ def tickers():
         tickers.append({u'id': int(ticker[0]), u'name': ticker[1], u'launch': datetime.strptime(ticker[2], '%Y/%m/%d')})
     return tickers
 
-def trades(ticker, start, stop):
+def get_trades(ticker, start, stop):
     '''
     Get trades from sberbank-am.ru
     NAV - Net Asset Value
 
-    >>> trades(1, datetime(2014, 4, 28), datetime(2014, 4, 29))
+    >>> get_trades(1, datetime(2014, 4, 28), datetime(2014, 4, 29))
     [{'date': datetime.datetime(2014, 4, 29, 0, 0), 'price': 23526.43, 'NAV': 7331141492.11}, {'date': datetime.datetime(2014, 4, 28, 0, 0), 'price': 23550.45, 'NAV': 7279685561.42}]
     '''
     csv = get('http://sberbank-am.ru/visible/chart/getCsv?fund=%s&dateFrom=%s&monthFrom=%s&yearFrom=%s&dateTo=%s&monthTo=%s&yearTo=%s' % (
